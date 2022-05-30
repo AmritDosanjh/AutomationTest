@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
@@ -8,11 +9,21 @@ namespace AutomationTest
     [Binding]
     public class Steps
     {
-        public IWebDriver driver = new ChromeDriver(".");
+        public IWebDriver driver;
+
+        public IWebDriver SetUpDriver()
+        {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.AddArgument("start-maximized");
+            return driver = new ChromeDriver(".", chromeOptions);
+        }
+
 
         [Given(@"The user navigates to Galactico eleven")]
         public void GivenSomeGeezerGoesToGoogle()
         {
+            SetUpDriver();
+
             driver.Navigate().GoToUrl("https://www.galacticoeleven.com/#!/login");
 
             Thread.Sleep(5000);
@@ -53,6 +64,17 @@ namespace AutomationTest
             createButton.Click();
 
             Thread.Sleep(5000);
+
+            string firstBoxText = driver.FindElement(By.XPath("(//div[@class='well ng-scope'])[1]//h5")).Text;
+            Assert.IsTrue(firstBoxText.Contains("Saiyans"), "It was expected for the first element text box to say Saiyans, but it did not");
+
+            string createdCompeitionName = driver.FindElement(By.XPath("(//div[@class='well ng-scope'])[1]//h5//small[1]")).Text;
+            Assert.IsTrue(createdCompeitionName.Contains("Competition: EPL 2021/22"), "It was expected for the competition name to be 'Competition: EPL 2021/22', but it did not");
+
+            string createdTeamName = driver.FindElement(By.XPath("(//div[@class='well ng-scope'])[1]//h5//small[2]")).Text;
+            Assert.IsTrue(createdTeamName.Contains("Team: Universe 7"), "It was expected for the team name to be 'Team: Universe 7', but it did not");
+
+            driver.Close();
         }
 
     }

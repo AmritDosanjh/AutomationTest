@@ -35,7 +35,7 @@ namespace AutomationTest
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "", "AutomationUI", "This is a set of AutomationUI Tests", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "", "AutomationUI", "This is a set of AutomationUI Tests to test Galactico Eleven", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -94,6 +94,12 @@ this.ScenarioInitialize(scenarioInfo);
                 this.ScenarioStart();
 #line 7
  testRunner.Given("The user navigates to Galactico eleven", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 8
+ testRunner.When("The user Clicks on the create leagues tabs", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 9
+ testRunner.Then("The users creates a league", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

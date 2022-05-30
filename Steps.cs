@@ -28,14 +28,19 @@ namespace AutomationTest
         {
             SetUpDriver();
 
+            // Navigate to URL.
             driver.Navigate().GoToUrl("https://www.galacticoeleven.com/#!/login");
 
+            // Wait for page to load.
             Thread.Sleep(5000);
 
+            // Finding of login elements.
             IWebElement loginInInput = driver.FindElement(By.XPath("//input[@type='email']"));
             IWebElement passwordInInput = driver.FindElement(By.XPath("//input[@type='password']"));
             IWebElement loginButton = driver.FindElement(By.XPath("//button[@ng-click='login()']"));
 
+            //Sent login details. 
+            // Clicked  login.
             loginInInput.SendKeys("heiiigssxltxobiujl@bvhrs.com");
             passwordInInput.SendKeys("Mortgagesupport1");
             loginButton.Click();
@@ -68,6 +73,7 @@ namespace AutomationTest
             SelectElement competitionNameDropdown = new SelectElement(competitionName);
             IWebElement createButton = driver.FindElement(By.XPath("//a[@ng-click='create()']"));
 
+            // Selected down by text.
             leagueName.SendKeys("Saiyans");
             teamName.SendKeys("Universe 7");
             competitionNameDropdown.SelectByText("EPL 2021/22");
@@ -75,6 +81,7 @@ namespace AutomationTest
 
             Thread.Sleep(5000);
 
+            // Assert Error message added.
             string firstBoxText = driver.FindElement(By.XPath("(//div[@class='well ng-scope'])[1]//h5")).Text;
             Assert.IsTrue(firstBoxText.Contains("Saiyans"), "It was expected for the first element text box to say Saiyans, but it did not");
 
@@ -84,6 +91,7 @@ namespace AutomationTest
             string createdTeamName = driver.FindElement(By.XPath("(//div[@class='well ng-scope'])[1]//h5//small[2]")).Text;
             Assert.IsTrue(createdTeamName.Contains("Team: Universe 7"), "It was expected for the team name to be 'Team: Universe 7', but it did not");
 
+            // Closed driver.
             driver.Close();
         }
     }

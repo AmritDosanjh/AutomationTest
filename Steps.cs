@@ -9,8 +9,11 @@ namespace AutomationTest
     [Binding]
     public class Steps
     {
+        // Declaring the initial driver
         public IWebDriver driver;
 
+        // Method to set up the driver with the root location and added chrome options.
+        // Chrome driver set up as public above so that all other methods can access it.
         public IWebDriver SetUpDriver()
         {
             ChromeOptions chromeOptions = new ChromeOptions();
@@ -18,9 +21,10 @@ namespace AutomationTest
             return driver = new ChromeDriver(".", chromeOptions);
         }
 
-
+        // Used driver to navigate to Galactico Eleven website.
+        // Logged in to page.
         [Given(@"The user navigates to Galactico eleven")]
-        public void GivenSomeGeezerGoesToGoogle()
+        public void GivenTheUserNavigatesToGalacticoEleven()
         {
             SetUpDriver();
 
@@ -37,6 +41,7 @@ namespace AutomationTest
             loginButton.Click();
         }
 
+        // Clicked on create leagues tab.
         [When(@"The user Clicks on the create leagues tabs")]
         public void WhenTheUserClicksOnTheCreateLeaguesTabs()
         {
@@ -49,6 +54,11 @@ namespace AutomationTest
             Thread.Sleep(5000);
         }
 
+        // Entered league name.
+        // Entered team name.
+        // Selected type of competition from dropdown.
+        // Clicked create league.
+        // Asserted created league details were correct.
         [Then(@"The users creates a league")]
         public void ThenTheUsersCreatesALeague()
         {
@@ -76,6 +86,5 @@ namespace AutomationTest
 
             driver.Close();
         }
-
     }
 }

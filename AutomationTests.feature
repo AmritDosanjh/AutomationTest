@@ -1,6 +1,6 @@
-﻿Feature: AutomationUI
+﻿Feature: AutomationTests
 
-This is a set of AutomationUI Tests to test Galactico Eleven
+This is a set of Automation Tests to test Galactico Eleven
 
 @UI_Test
 Scenario: GalacticoElevenCreateLeague

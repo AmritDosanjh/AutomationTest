@@ -1,7 +1,9 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using RestSharp;
 using TechTalk.SpecFlow;
 
 namespace AutomationTest
@@ -9,8 +11,13 @@ namespace AutomationTest
     [Binding]
     public class Steps
     {
-        // Declaring the initial driver
+        // Declaring the initial driver.
         public IWebDriver driver;
+
+        // Declare token to use for API Requests.
+        public string AuthenticationToken;
+        public string CreatedLeagueId;
+        public string createdLeageName;
 
         // Method to set up the driver with the root location and added chrome options.
         // Chrome driver set up as public above so that all other methods can access it.
@@ -94,5 +101,78 @@ namespace AutomationTest
             // Closed driver.
             driver.Close();
         }
+
+        // Sends POST request to the login to obtain authentication token. 
+        [Given(@"the user POSTS usernmae and password to GalacticoEleven login")]
+        public void GivenTheUserPOSTSUsernmaeAndPasswordToGalacticoElevenLogin()
+        {
+            // RestClient sets the URL to which we are going to hit.
+            var client = new RestClient("https://www.galacticoeleven.com/login");
+
+            // Setting the request method type we want to sent, i.e. GET, POST, PUT etc.
+            var request = new RestRequest(Method.POST);
+
+            // Add JSON body to request.
+            request.AddJsonBody("{\"email\":\"heiiigssxltxobiujl@bvhrs.com\",\"password\":\"Mortgagesupport1\"}");
+
+            // Execute request to client(URL) with request(Method and JSON Body).
+            IRestResponse response = client.Execute(request);
+
+            // Stores token in string.
+            AuthenticationToken = response.Content;
+
+            // Write out the API response to the console.
+            Console.WriteLine("This is the token: " + AuthenticationToken);
+        }
+
+        // Creates a new league using the POST leagues URL
+        [When(@"the user POSTS a new league")]
+        public void WhenTheUserPOSTSANewLeague()
+        {
+            // RestClient sets the URL to which we are going to hit.
+            var client = new RestClient("https://www.galacticoeleven.com/api/league/");
+
+            // Setting the request method type we want to sent, i.e. GET, POST, PUT etc.
+            var request = new RestRequest(Method.POST);
+
+            // Adding authentication token captured earlier.
+            request.AddHeader("authorization", "Bearer " + AuthenticationToken);
+
+            request.AddJsonBody("{\"name\":\"SaiyanAPI\",\"competition\":4}");
+
+            // Execute request to client(URL) with request(Method and JSON Body).
+            IRestResponse response = client.Execute(request);
+
+            Console.WriteLine("Created League Output: " + response.Content);
+
+            // Stores the API Response into a JSON object, so that we can capture individual elements of the JSON.
+            var JSONResponse = JObject.Parse(response.Content);
+
+            // Store JSON Object properties into strings.
+            CreatedLeagueId = JSONResponse["_id"].ToString();
+            createdLeageName = JSONResponse["name"].ToString();
+        }
+
+        // Sends a GET request to the leagues URL to return all leagues.
+        // Assert newly created league exists in response.
+        [Then(@"the user GETS the leagues to validate the new league has been created")]
+        public void ThenTheUserGETSTheLeaguesToValidateTheNewLeagueHasBeenCreated()
+        {
+            // RestClient sets the URL to which we are going to hit.
+            var client = new RestClient("https://www.galacticoeleven.com/api/league/");
+
+            // Setting the request method type we want to sent, i.e. GET, POST, PUT etc.
+            var request = new RestRequest(Method.GET);
+
+            // Adding authentication token captured earlier.
+            request.AddHeader("authorization", "Bearer " + AuthenticationToken);
+
+            // Execute request to client(URL) with request(Method and JSON Body).
+            IRestResponse response = client.Execute(request);
+
+            Console.WriteLine("Returned League Output: " + response.Content);
+        }
+
+
     }
 }

@@ -14,7 +14,7 @@ namespace AutomationTest
         // Declaring the initial driver.
         public IWebDriver driver;
 
-        // Declare token to use for API Requests.
+        // Declare token to use for API Requests and other strings for later requests.
         public string AuthenticationToken;
         public string CreatedLeagueId;
         public string createdLeageName;
@@ -170,9 +170,21 @@ namespace AutomationTest
             // Execute request to client(URL) with request(Method and JSON Body).
             IRestResponse response = client.Execute(request);
 
+            // Ouput the response to the console.
             Console.WriteLine("Returned League Output: " + response.Content);
+
+            // Capture the JSON Array which contains the JSON Objects.
+            var JSONResponse = JArray.Parse(response.Content);
+
+            // Loop over every JSON object in the JSON Array
+            foreach(JObject JsonObj in JSONResponse)
+            {
+                // If the JSON obeject contains the created league ID it will assert the league name is correct 
+                if (JsonObj["_id"].ToString().Equals(CreatedLeagueId))
+                {
+                    Assert.IsTrue(JsonObj["name"].ToString().Equals(createdLeageName), "It was expected for the Created League name to be " + createdLeageName + " but was " + JsonObj["name"]);
+                }
+            }
         }
-
-
     }
 }
